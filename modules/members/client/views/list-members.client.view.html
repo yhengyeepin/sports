@@ -1,0 +1,26 @@
+<section>
+  <div class="page-header">
+    <h1>Members</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="member in vm.members"
+       data-ui-sref="members.view({ memberId: member._id })"
+       class="list-group-item">
+
+      <img ng-src="modules/users/client/img/profile/default.png" class="header-profile-image" src="modules/users/client/img/profile/default.png">
+      
+      <h4 class="list-group-item-heading" data-ng-bind="member.firstname"></h4>
+      <h4 class="list-group-item-heading" data-ng-bind="member.lastname"></h4>
+      <small class="list-group-item-text">
+        Joined on
+        <span data-ng-bind="member.created | date:'mediumDate'"></span>
+        <!--  by
+        <span data-ng-if="member.user" data-ng-bind="member.user.displayName"></span>-->
+        <span data-ng-if="!member.user">Deleted User</span>
+      </small>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.members.$resolved && !vm.members.length">
+    No Members yet, why don't you <a data-ui-sref="members.create">create one</a>?
+  </div>
+</section>

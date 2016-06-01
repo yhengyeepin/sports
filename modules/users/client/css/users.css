@@ -34,3 +34,78 @@
   min-height: 150px;
   max-height: 150px;
 }
+
+.form-group {
+    position: relative;
+}
+
+.single-line-text-field__hint, .single-line-text-field__caption, .single-line-text-field__character-count {
+  font-family: HelveticaNeue-Light, 'Helvetica Neue Light', HelveticaNeue, 'Helvetica Neue', Helvetica, Arial, Roboto, sans-serif;
+  font-weight: lighter;
+  font-size: 12px;	
+}
+
+.single-line-text-field {
+  position: relative;
+  height: 50px;
+
+  }
+
+.single-line-text-field__input {
+  color: black ;
+  font-size: 16px;	
+  font-style:normal;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+  width: 100%;
+  height: 30px;
+  padding-top: 10px;
+  border: 0;
+  border-bottom: 1px solid black;
+  margin-top: 11px;
+  background-color: transparent; }
+
+  .single-line-text-field__input:focus {
+    outline: none; }
+
+.single-line-text-field__hint {
+  font-size: 12px;	
+  position: absolute;
+  -webkit-transition: top 0.15s ease-in-out, font-size 0.15s linear;
+  transition: top 0.15s ease-in-out, font-size 0.15s linear;
+  top: 0;
+  left: 0;
+  height: 11px;
+  line-height: 11px;
+  pointer-events: none; }
+  .single-line-text-field__input:not(:focus):invalid + .single-line-text-field__hint {
+    color: #777677;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    text-rendering: optimizeLegibility;
+    top: 10px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 16px;
+    }
+
+.single-line-text-field__caption {
+  color: #777677 ;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+  float: left;
+  margin-top: 5px; }
+
+.single-line-text-field__character-count {
+  color: #777677 ;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+  float: right;
+  margin-top: 5px; }
+
+.single-line-text-field__clear {
+  clear: both;
+  height: 0; }

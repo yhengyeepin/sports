@@ -1,0 +1,20 @@
+<section ng-controller="KioskController">
+  <div class="page-header">
+    <div class="row">
+      <div class="court" ng-repeat="court in courts" ng-controller="CourtController">
+        <div class="court-card">
+            <div class="time-left"><timer countdown="court.countDownTime" max-time-unit="'minute'" interval="1000" finish-callback="callbackTimer.finished()"><span>{{court.playTimeLeft}}</span></div>
+            
+            <div class="time-left-progressbar" ng-style="timeLeftWidth"></div><div class="time-left-progressbar-empty"></div>
+            <div class="court-name">{{$index + 1}}</div>
+        </div>
+        <div id="{{'court_'+($index+1)}}" ng-style="buttonColor" class="button" ng-click="signup($index, $event)"><div>{{playTime}}</div><!-- div>{{court.groupsWaiting}}</div --></div>
+        <div class="players">
+            {{currentOrNextPlayers}}
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</section>

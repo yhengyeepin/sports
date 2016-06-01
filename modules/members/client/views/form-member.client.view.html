@@ -1,0 +1,49 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.member._id ? 'Edit Member' : 'New Member'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.memberForm" class="form-horizontal" ng-submit="vm.save(vm.form.memberForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          
+          <input name="firstname" type="text" ng-model="vm.member.firstname" id="firstname" class="single-line-text-field__input" required>
+          <label class="single-line-text-field__hint" for="firstname">First name</label>
+          <div ng-messages="vm.form.memberForm.firstname.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">First name is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="lastname" type="text" ng-model="vm.member.lastname" id="lastname" class="single-line-text-field__input" required>
+          <label class="single-line-text-field__hint" for="lastname">Last name</label>
+          <div ng-messages="vm.form.memberForm.lastname.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Last name is required.</p>
+          </div>
+        </div>
+ 
+        <div class="form-group" show-errors>
+          <input name="phone" type="text" ng-model="vm.member.phone" id="phone" class="single-line-text-field__input" required>
+          <label class="single-line-text-field__hint" for="phone">Phone</label>
+          <div ng-messages="vm.form.memberForm.phone.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Phone is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <input name="email" type="text" ng-model="vm.member.email" id="email" class="single-line-text-field__input" required>
+          <label class="single-line-text-field__hint" for="lastname">Email</label>
+          <div ng-messages="vm.form.memberForm.email.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Email is required.</p>
+          </div>
+        </div>         
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.member._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

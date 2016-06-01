@@ -27,5 +27,16 @@ angular.module('users.admin').controller('UserListController', ['$scope', '$filt
     $scope.pageChanged = function () {
       $scope.figureOutItemsToDisplay();
     };
+    
+    $scope.checkin = function(user) {
+      user.$update(function (errorResponse) {
+        $scope.success = true;
+      }, function (errorResponse) {
+        $scope.error = errorResponse.data.message;
+      });
+    };
   }
 ]);
+
+
+      

@@ -11,11 +11,29 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
       });
     });
 
+   /* .state('authentication.signup', {
+        url: '/signup',
+        templateUrl: 'modules/users/client/views/authentication/signup.client.view.html'
+      })
+      .state('authentication', {
+        abstract: true,
+        url: '/authentication',
+        templateUrl: 'modules/users/client/views/authentication/authentication.client.view.html'
+      })
+      .state('authentication.signup', {
+        url: '/signup',
+        templateUrl: 'modules/users/client/views/authentication/signup.client.view.html'
+      })*/
+      
     // Home state routing
     $stateProvider
     .state('home', {
-      url: '/',
-      templateUrl: 'modules/core/client/views/home.client.view.html'
+      abstract: true,	
+      url: '/authentication/signup',
+      templateUrl: 'modules/users/client/views/authentication/authentication.client.view.html'
+    }).state('home.signup', {
+      url: '/authentication/signup',
+      templateUrl: 'modules/users/client/views/authentication/signup.client.view.html'
     })
     .state('not-found', {
       url: '/not-found',

@@ -15,6 +15,12 @@ exports.invokeRolesPolicies = function () {
   acl.allow([{
     roles: ['admin'],
     allows: [{
+      resources: '/api/courts',
+      permissions: '*'
+    },{
+      resources: '/api/courts/:id',
+      permissions: '*'
+    },{
       resources: '/api/users',
       permissions: '*'
     }, {

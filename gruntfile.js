@@ -151,6 +151,16 @@ module.exports = function (grunt) {
       }
     },
     less: {
+      dev: {
+        files: [{
+          expand: true,
+          src: defaultAssets.client.less,
+          ext: '.css',
+          rename: function (base, src) {
+            return src.replace('/less/', '/css/');
+          }
+        }]
+      },
       dist: {
         files: [{
           expand: true,

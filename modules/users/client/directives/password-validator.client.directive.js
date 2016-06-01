@@ -20,8 +20,8 @@ angular.module('users')
               { color: 'success', progress: '100' }
             ];
 
-            if (result.errors.length < requirementsMeter.length) {
-              requirementsIdx = requirementsMeter.length - result.errors.length - 1;
+            if (result.optionalTestErrors.length < requirementsMeter.length) {
+              requirementsIdx = requirementsMeter.length - result.optionalTestErrors.length - 1;
             }
 
             scope.requirementsColor = requirementsMeter[requirementsIdx].color;

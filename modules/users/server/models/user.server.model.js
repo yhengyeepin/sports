@@ -28,6 +28,46 @@ var validateLocalStrategyEmail = function (email) {
  * User Schema
  */
 var UserSchema = new Schema({
+  phone: {
+    type: Number,
+    default: '',
+    required: 'You\'ll use this to reserve court or reset your password.',
+    trim: true
+  },
+  isMember: {
+    type: Boolean,
+    default: false,
+  },
+  checkIn: {
+    type: Boolean,
+    default: false,
+  },
+  membership: {
+    effectiveDate: Date,
+    expirationDate: Date,
+    description: String
+  },
+  membershipHistory: {
+    type : Array , 
+    default : [] 
+  },
+  dropin: {
+    type: Date
+  },
+  dropinHistory: {
+    type : Array , 
+    default : [] 
+  },
+  qrcode: {
+    type: String
+  },
+  groups: [{
+    name : String
+  }],
+  created: {
+    type: Date,
+    default: Date.now
+  },
   firstName: {
     type: String,
     trim: true,
@@ -79,17 +119,13 @@ var UserSchema = new Schema({
   roles: {
     type: [{
       type: String,
-      enum: ['user', 'admin']
+      enum: ['user', 'admin', 'kioskUser', 'keeper' ]
     }],
     default: ['user'],
     required: 'Please provide at least one role'
   },
   updated: {
     type: Date
-  },
-  created: {
-    type: Date,
-    default: Date.now
   },
   /* For reset password */
   resetPasswordToken: {

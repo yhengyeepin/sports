@@ -5,7 +5,14 @@ angular.module('users').config(['$stateProvider',
   function ($stateProvider) {
     // Users state routing
     $stateProvider
-      .state('settings', {
+      .state('kiosk', {
+        url: '/kiosk',
+        templateUrl: 'modules/users/client/views/kiosk/book-courts.client.view.html',
+        controller: 'KioskController',
+        data: {
+          roles: ['user', 'admin']
+        }
+      }).state('settings', {
         abstract: true,
         url: '/settings',
         templateUrl: 'modules/users/client/views/settings/settings.client.view.html',
