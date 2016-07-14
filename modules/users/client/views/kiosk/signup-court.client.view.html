@@ -5,7 +5,7 @@
         <h2>Court {{courtName}}</h2>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="cancel()">
-          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+          <md-icon class="close-icon" aria-label="Close dialog"></md-icon>
         </md-button>
       </div>
     </md-toolbar>
@@ -18,9 +18,9 @@
 		<div>
 		  <div class="member-list example-animate-container">
 		    <div class="animate-repeat" ng-repeat="member in members | filter:q as results">
-	            <md-checkbox ng-model="member.signup" ng-click="updateSignUp($event, member.name)" aria-label="Sign Up">
+	            <md-checkbox ng-model="member.checkSignUp" ng-click="updateSignUp($event, member)" aria-label="Sign Up">
 	            </md-checkbox>
-		      {{member.name}} 
+		      {{member.firstName}} {{member.lastName}}
 		    </div>
 		    <div class="animate-repeat" ng-if="results.length == 0">
 		      <strong>No results found...</strong>
@@ -28,14 +28,21 @@
 		  </div>
 		</div>
 		<div class="waiting-line">
-		  {{lines.length}} group(s) in the line
           <div><md-checkbox ng-model="merge.value" ng-click="updateMerge($event)" aria-label="Merge to last group">
-               </md-checkbox>Merge to last court</div>		  
-		  <ul class="example-animate-container">
+               </md-checkbox>Merge to last group</div>
+          <div>
+            <div class="animate-repeat" ng-repeat="line in lines">
+              <div class="group-card">
+                 <div class="group-title">Group {{$index+1}}</div>
+                 <div class="animate-repeat group-player" ng-repeat="player in line">{{player}}</div>
+              </div>
+          </div>
+          </div>	  
+		  <!-- ul class="example-animate-container">
             <li class="animate-repeat" ng-repeat="line in lines">
               {{line.join(', ')}}
             </li>
-          </ul>
+          </ul> -->
 		</div>
       </div>
     </md-dialog-content>

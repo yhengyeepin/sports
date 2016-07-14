@@ -6,39 +6,51 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
       $scope.courts = data;
       for (var i=0; i < $scope.courts.length; i++) {
         // update groups waiting
+        //$scope.courts[i].name = i+1;
+        //Courts.update({id:$scope.courts[i]._id}, $scope.courts[i]);
+
         if ($scope.courts[i].countDownTime === 0) {
-          $scope.court.playTimeLeft = "Open";
+          $scope.courts[i].playTimeLeft = "Open";
         } else if ($scope.courts[i].countDownTime > 60)
-          $scope.court.playTimeLeft = Math.round($scope.courts[i].countDownTime/60) + " min";
+          $scope.courts[i].playTimeLeft = Math.round($scope.courts[i].countDownTime/60) + " min";
         else
-          $scope.court.playTimeLeft = $scope.courts[i].countDownTime + " s";
+          $scope.courts[i].playTimeLeft = $scope.courts[i].countDownTime + " s";
         
         if ($scope.courts[i].waitingList.length < 2) {
-          $scope.courts[i].groupsWaiting = 'No line';
+          $scope.courts[i].groupsWaiting = 'No line1';
         } else {
           $scope.courts[i].groupsWaiting = ($scope.courts[i].waitingList.length - 1) + ' group(s) waiting';
         }
         
         if ($scope.courts[i].waitingList.length > 0) {
-          $scope.courts[i].currentOrNextPlayers = 'Current: ' + $scope.courts[i].waitingList[0].join(', ');
+          $scope.courts[i].currentOrNextPlayers = 'Current1: ' + $scope.courts[i].waitingList[0].join(', ');
         }
         // display next players when it is < 10 minutes and there is a next group
         else if ($scope.courts[i].waitingList.length > 1) {
-          $scope.courts[i].currentOrNextPlayers = 'Next: ' + $scope.courts[i].waitingList[1].join(', ');
+          $scope.courts[i].currentOrNextPlayers = 'Next1: ' + $scope.courts[i].waitingList[1].join(', ');
         }
     
         if ($scope.courts[i].waitingList.length === 0) {
           $scope.courts[i].currentOrNextPlayers = '';
-        }        
-            
+        }
+        //update($scope.courts[i]);
       }
     });
 
   
 
-} ]).controller('CourtController', [ '$scope', '$timeout', '$mdDialog', 'Courts', '$resource', function($scope, $timeout, $mdDialog, Courts, $resource) {
+} ]).controller('CourtController', [ '$scope', '$timeout', '$mdDialog', 'Courts', '$resource', 'Users', 'FreeUsers', function($scope, $timeout, $mdDialog, Courts, $resource, Users, FreeUsers) {
 
-  $scope.members = [ {
+  Users.query(function (data) {
+      $scope.members = data;
+      for (var i=0; i<$scope.members.length; i++) {
+        //$scope.members[i].signUp = false;
+        //Users.update({id:$scope.members[i]._id}, $scope.members[i]);
+      }
+      
+    });
+  
+  /*$scope.members = [ {
     name : 'John',
     signup : false,
     gender : 'boy'
@@ -54,12 +66,26 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
     name : 'Jessie',
     signup : false,
     gender : 'girl'
-  } ];
+  } ];*/
 
-  var chance = new Chance();
-  for (var i = 0; i < 30; i++) {
-    $scope.members.push ({ name: chance.first(), signup: false, gender: 'boy'});
-  }
+  //add 30 members
+
+  /*var chance = new Chance();
+  for (var i = 0; i < 3; i++) {
+    var emailc = chance.email();
+    var member1 = new Users({
+        firstName: chance.first(),
+        lastName: chance.last(),
+        phone: chance.phone({ formatted: false }),
+        email: emailc,
+        username: emailc,
+        roles: ['user']
+    });
+
+    Users.save(member1,  function() {
+      console.log("save here");
+    }); //saves 
+  }*/
 
 
   $scope.signup = function($index, ev) {
@@ -100,11 +126,39 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
       return out;
     }
 
+    function rearrangeLines(waitingList, merge) {
+      var out = [];
+      var players = [];
+      for (var i = 0; i < waitingList.length ; i++) {
+        if (i===0 && merge) {
+          out.push(waitingList[i]);
+          continue;
+        }
+        for (var j = 0; j < waitingList[i].length ; j++) {
+           //line up in player list
+           players.push(waitingList[i][j]);          
+        }
+      }
+      
+      var group = [];
+      for (i = 0; i < players.length ; i++) {
+        if (i%4===0 && i !==0 ) {
+          out.push(group);
+          group = [];
+        }
+        group.push(players[i]);
+      }
+      if (group.length !==0 )
+        out.push(group);
+      return out;
+    }
+
     function SignUpDialogController($scope, waitingList, courtName, waitingTime, courts, parentScope) {
 
       $scope.merge = {
              value : false
            };
+      
       //$scope.waitingList = $scope.lines;
       $scope.courtName = courtName;
       $scope.court = courts[courtName-1];
@@ -115,25 +169,36 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
       
       $scope.lines = copyWaitingList($scope.committedWaitingList);
 
-      $scope.updateSignUp = function($event, id) {
+      $scope.updateMerge = function($event) {
+        $scope.lines = rearrangeLines($scope.lines, $scope.merge.value);
+      };
+      $scope.updateSignUp = function($event, member) {
+        var id = member.displayName;
         var checkbox = $event.target;
-        var action = (checkbox.checked ? 'add' : 'remove');
-
+        var action = (!member.checkSignUp ? 'add' : 'remove');
+        console.log(member.checkSignUp);
         if (action === 'remove') {
+          member.signUp = false;
+          console.log(action);
           for (var i=0; i < $scope.lines.length; i++) {
             var index = $scope.lines[i].indexOf(id);
             if (index > -1) {
               $scope.lines[i].splice(index, 1);
+              $scope.lines = rearrangeLines($scope.lines, !$scope.merge.value);
+              //rearrange lines
               return;
             } 
           }
+        } else {
+          //$scope.lines = rearrangeLines($scope.lines, !$scope.merge.value);
         }
+        
+        member.signUp = true;
         //do we allow more than 4 players sign up
         //do we allow merge to last court if not yet played or played less than 10 minutes
         //push to existing only when it is not the original number of group
 
-        if ( ($scope.originalNumOfGroup != $scope.lines.length || $scope.merge.value)
-            && $scope.lines.length > 0 && $scope.lines[$scope.lines.length-1].length < 4 ) {
+        if ( ($scope.originalNumOfGroup !== $scope.lines.length || $scope.merge.value) && $scope.lines.length > 0 && $scope.lines[$scope.lines.length-1].length < 4 ) {
               $scope.lines[$scope.lines.length-1].push(id);
             
 
@@ -182,7 +247,7 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
           $scope.$broadcast('timer-start');
         }
         update($scope.court);
-
+        //update member sign up
         $mdDialog.hide(answer);
       };
     }
@@ -192,7 +257,7 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
   };
 
   function update(crt) {
-
+    
     //update if the court is open for merging
     //if ($scope.court.countDownTime > 5) {
     //  $scope.court.open = 'closed';
@@ -285,7 +350,7 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
 
     // display current players when it is more than
     // 10 minutes or there is no next group
-    if ($scope.court.countDownTime > 600 && $scope.court.waitingList.length > 0 || $scope.court.waitingList.length == 1) {
+    if ($scope.court.countDownTime > 600 && $scope.court.waitingList.length > 0 || $scope.court.waitingList.length === 1) {
       $scope.currentOrNextPlayers = 'Current: ' + $scope.court.waitingList[0].join(', ');
     }
     // display next players when it is < 10 minutes and there is a next group
@@ -324,6 +389,7 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
 
     $timeout(function() {
 
+      //console.log("ticking court "+$scope.court.name);
       var second = Math.round(args.millis / 1000);
       //console.log("seconds "+$scope.court.seconds);
       $scope.timeLeftWidth = {
@@ -334,11 +400,11 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
       var timeLeft = Math.round(second / 60);
       
       $scope.court.playTimeLeft = timeLeft + " min";
-      if (args.millis === 0) {
+      if (second === 0) {
         $scope.court.playTimeLeft = "Open";
       } else if ( second < 60)
         $scope.court.playTimeLeft = second + " s";
-
+      
       $scope.court.countDownTime = Math.round(args.millis / 1000);
       $scope.court.waitingTime =  Math.round($scope.court.countDownTime/60);
       if ($scope.court.waitingList.length > 1)
@@ -351,6 +417,15 @@ angular.module('users.admin', [ 'timer', 'ngMaterial', 'ngAria', 'ngAnimate', 'n
     $scope.callbackTimer = {};
     $scope.callbackTimer.finished = function() {
 
+      //need to unsign current users
+      if ($scope.court.waitingList > 0 ) {
+        for (var i=0; i< $scope.court.waitingList[0].length; i++) {
+          Users.get({id:$scope.court.waitingList[0][i]}, function(user) {            
+             user.signup = false;
+             Users.update({id:user._id}, user);     
+          });          
+        }
+      }
       // when waiting time becomes
       // 0, remove the current
       // players from the waiting

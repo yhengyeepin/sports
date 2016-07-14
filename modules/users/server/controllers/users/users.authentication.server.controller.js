@@ -19,6 +19,8 @@ var noReturnUrls = [
  * Signup
  */
 exports.signup = function (req, res) {
+  
+
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
 
@@ -30,9 +32,12 @@ exports.signup = function (req, res) {
   user.provider = 'local';
   user.displayName = user.firstName + ' ' + user.lastName;
 
+  console.log("signing up "+user.firstName);
+  console.log("sign up username "+user.username);
   // Then save the user
   user.save(function (err) {
     if (err) {
+      console.log(err);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });

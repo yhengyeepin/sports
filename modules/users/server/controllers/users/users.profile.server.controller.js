@@ -18,7 +18,7 @@ var _ = require('lodash'),
 exports.update = function (req, res) {
   // Init Variables
   var user = req.user;
-
+  console.log("updating user here");
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
 
@@ -27,13 +27,16 @@ exports.update = function (req, res) {
     user = _.extend(user, req.body);
     user.updated = Date.now();
     user.displayName = user.firstName + ' ' + user.lastName;
-
+    console.log(user.firstName);
+    console.log(user.email);
     user.save(function (err) {
       if (err) {
+        console.log(err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });
       } else {
+        console.log("save successfully");
         req.login(user, function (err) {
           if (err) {
             res.status(400).send(err);

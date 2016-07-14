@@ -27,7 +27,10 @@ exports.update = function (req, res) {
   user.displayName = user.firstName + ' ' + user.lastName;
   user.roles = req.body.roles;
   user.checkIn = req.body.checkIn;
-  console.log("checkin: "+req.body.checkin);
+  user.phone = req.body.phone;
+  user.email = req.body.email;
+
+  console.log("updating user: "+req.body.firstName);
 
   user.save(function (err) {
     if (err) {
@@ -61,7 +64,19 @@ exports.delete = function (req, res) {
  * List of Users
  */
 exports.list = function (req, res) {
-  User.find({}, '-salt -password').sort('-created').populate('user', 'displayName').exec(function (err, users) {
+  User.find({}, '-salt -password').sort({firstName: 1}).populate('user', 'displayName').exec(function (err, users) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    }
+
+    res.json(users);
+  });
+};
+
+exports.freelist = function (req, res) {
+  User.find({signUp:false}, '-salt -password').sort({firstName: 1}).populate('user', 'displayName').exec(function (err, users) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

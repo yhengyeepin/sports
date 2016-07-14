@@ -38,6 +38,10 @@ var UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  signUp: {
+    type: Boolean,
+    default: false,
+  },
   checkIn: {
     type: Boolean,
     default: false,

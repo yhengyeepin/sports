@@ -17,3 +17,4 @@ angular.module('users.admin').factory('Courts', ['$resource',
     });
   }
 ]);
+

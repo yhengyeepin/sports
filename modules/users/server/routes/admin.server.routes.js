@@ -15,6 +15,9 @@ module.exports = function (app) {
   app.route('/api/users')
     .get(adminPolicy.isAllowed, admin.list);
 
+  app.route('/api/freeusers')
+    .get(adminPolicy.isAllowed, admin.freelist);
+    
   // Single user routes
   app.route('/api/users/:userId')
     .get(adminPolicy.isAllowed, admin.read)
